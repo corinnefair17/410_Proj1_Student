@@ -25,20 +25,50 @@ int stringToInt(const char *myString) {
 }
 
 int loadData(const char *filename, bool ignoreFirstRow) {
+	// Make sure stats is an empty vector
+	stats = { };
+
+	// Open file and create a string to hold each line
 	ifstream file(filename);
 	string line;
 
+	// Make sure the file is good, otherwise return error code
 	if (!file.good()) {
 		return COULD_NOT_OPEN_FILE;
 	}
 
+	// If we ignore the first row, read it without doing anything to go to next row
 	if (ignoreFirstRow) {
 		getline(file, line);
 	}
 
 	while (getline(file, line)) {
-		cout << line << endl;
+		// Initialize temporary vector to hold values
+		vector<int> values;
+
+		// Create stringstream to read line by delimiter & add values to temp vector
+		stringstream ss(line);
+		string value;
+		while (getline(ss, value, CHAR_TO_SEARCH_FOR)) {
+			values.push_back(stringToInt(value.c_str()));
+		}
+
+		// ONLY process line if there are the right number of arguments
+		if (values.size() == 4) {
+			process_stats s;
+			s.io_time = values.back();
+			values.pop_back();
+			s.cpu_time = values.back();
+			values.pop_back();
+			s.start_time = values.back();
+			values.pop_back();
+			s.process_number = values.back();
+			values.pop_back();
+			stats.push_back(s);
+		}
 	}
+
+	file.close();
 
 	return SUCCESS;
 }
