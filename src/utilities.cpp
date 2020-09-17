@@ -73,9 +73,43 @@ int loadData(const char *filename, bool ignoreFirstRow) {
 	return SUCCESS;
 }
 
+
+// Helper method to sort by CPU Time
+bool compareCpuTime(process_stats &a, process_stats &b) {
+	return a.cpu_time < b.cpu_time;
+}
+
+// Helper method to sort by Process Number
+bool compareProcessNumber(process_stats &a, process_stats &b) {
+	return a.process_number < b.process_number;
+}
+
+// Helper method to sort by start time
+bool compareStartTime(process_stats &a, process_stats &b) {
+	return a.start_time < b.start_time;
+}
+
+// Helper method to sort by IO Time
+bool compareIOTime(process_stats &a, process_stats &b) {
+	return a.io_time < b.io_time;
+}
+
 //will sort according to user preference
 void sortData(SORT_ORDER mySortOrder) {
-
+	switch(mySortOrder) {
+	case CPU_TIME:
+		sort(stats.begin(), stats.end(), compareCpuTime);
+		break;
+	case PROCESS_NUMBER:
+		sort(stats.begin(), stats.end(), compareProcessNumber);
+		break;
+	case START_TIME:
+		sort(stats.begin(), stats.end(), compareStartTime);
+		break;
+	case IO_TIME:
+		sort(stats.begin(), stats.end(), compareIOTime);
+		break;
+	}
 }
 
 process_stats getNext() {
