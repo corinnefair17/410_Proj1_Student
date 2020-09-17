@@ -50,7 +50,10 @@ int loadData(const char *filename, bool ignoreFirstRow) {
 		stringstream ss(line);
 		string value;
 		while (getline(ss, value, CHAR_TO_SEARCH_FOR)) {
-			values.push_back(stringToInt(value.c_str()));
+			// Don't add empty values
+			if (value != "") {
+				values.push_back(stringToInt(value.c_str()));
+			}
 		}
 
 		// ONLY process line if there are the right number of arguments
@@ -114,6 +117,9 @@ void sortData(SORT_ORDER mySortOrder) {
 
 process_stats getNext() {
 	process_stats myFirst;
+
+	myFirst = stats.front();
+	stats.erase(stats.begin());
 
 	return myFirst;
 }
